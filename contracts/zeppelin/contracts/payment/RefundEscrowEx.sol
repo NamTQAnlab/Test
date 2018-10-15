@@ -64,7 +64,6 @@ contract RefundEscrowEx is Ownable, EscrowEx {
    */
   function beneficiaryWithdraw() public {       /////**** token.transfer
     require(state == State.Closed);
-
     _token.transfer(beneficiary, _token.balanceOf(address(this))); // Transfer From(from, to , value) // this is rax token
   }
 
