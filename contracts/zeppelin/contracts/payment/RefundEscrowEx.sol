@@ -17,10 +17,6 @@ contract RefundEscrowEx is Ownable, EscrowEx {
   event Closed();
   event RefundsEnabled();
 
-
-
-
-  ERC20 token;
   State public state;
   address public beneficiary;
 
@@ -69,7 +65,7 @@ contract RefundEscrowEx is Ownable, EscrowEx {
   function beneficiaryWithdraw() public {       /////**** token.transfer
     require(state == State.Closed);
   //  beneficiary.transfer(address(this).balance); // token,transfer()
-    token.transferFrom(address(token), beneficiary , token.balanceOf(address(token))); // Transfer From(from, to , value) // this is rax token
+    _token.transferFrom(address(_token), beneficiary , _token.balanceOf(address(_token))); // Transfer From(from, to , value) // this is rax token
   }
 
   /**

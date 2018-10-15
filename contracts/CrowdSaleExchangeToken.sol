@@ -10,7 +10,7 @@ import "./zeppelin/contracts/crowdsale/distribution/RefundableCrowdsaleEx.sol";
 contract CrowdsaleExchangeToken is Crowdsale, RefundableCrowdsaleEx{
   uint256 public PATRaised;
   ERC20 public PAT;
-  ERC20 public RAX;
+  ERC20 public _token;
   uint256 _amount ;
   constructor(uint256 _rate, address _wallet, ERC20 _tokenExchange, ERC20 _RAXtoken ,uint256 _goal, uint256 _openingTime, uint256 _closingTime )
   RefundableCrowdsaleEx(_goal)
@@ -22,7 +22,7 @@ contract CrowdsaleExchangeToken is Crowdsale, RefundableCrowdsaleEx{
     rate = _rate;
     wallet = _wallet;
     PAT = _tokenExchange;
-    RAX = _RAXtoken;
+    _token = _RAXtoken;
   }
   event TokenExchange(
     address indexed purchaser,
@@ -33,11 +33,11 @@ contract CrowdsaleExchangeToken is Crowdsale, RefundableCrowdsaleEx{
 
     function buyTokensExchange(address _beneficiary) public {  // this function use if purchaser want to buy PAT token by RAX tokens
 
-     _amount = RAX.allowance(msg.sender, address(this));
+     _amount = _token.allowance(msg.sender, address(this));
 
      _preValidatePurchase(_beneficiary, _amount);
 
-     RAX.transferFrom( msg.sender, wallet , _amount);
+     _token.transferFrom( msg.sender, wallet , _amount);
 
      PATRaised = PATRaised.add(_amount);
 
@@ -50,6 +50,6 @@ contract CrowdsaleExchangeToken is Crowdsale, RefundableCrowdsaleEx{
         _beneficiary,
         _amount
       );
-      _forwardFundsToken(tokenAmount, RAX);
+      _forwardFundsToken(tokenAmount, _token);
     }
 }
