@@ -46,7 +46,6 @@ contract CrowdsaleExchangeToken is Crowdsale, RefundableCrowdsaleEx{
       _beneficiary,
       _amount
     );
-
-    _forwardFundsToken(tokenAmount, RAXToken);
+    _forwardFundsToken(tokenAmount, RAXToken);   // purcharser will send rax into Escrow in function Deposit 
   }
 }
