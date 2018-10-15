@@ -19,7 +19,7 @@ contract EscrowEx is Ownable , Escrow {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
 
-  ERC20 _token;
+  ERC20 public _token;
 
   event Deposited(address indexed payee, uint256 tokenAmount);
   event Withdrawn(address indexed payee, uint256 tokenAmount);
@@ -30,13 +30,11 @@ contract EscrowEx is Ownable , Escrow {
     return depositsEx[_payee];
   }
 
-
-
   /**
   * @dev Stores the sent amount as credit to be withdrawn.
   * @param _payee The destination address of the funds.
   */
-  function deposit(address _payee , uint256 amount, ERC20 _token ) public onlyOwner {
+  function deposit(address _payee , uint256 amount, ERC20 _token) public onlyOwner {
       // transfer token
     _token.transferFrom(_payee, address(this), amount); // transferfrom ... call by rax token
     depositsEx[_payee] = depositsEx[_payee].add(amount);

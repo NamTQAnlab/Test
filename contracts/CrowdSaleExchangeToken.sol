@@ -10,7 +10,7 @@ import "./zeppelin/contracts/crowdsale/distribution/RefundableCrowdsaleEx.sol";
 contract CrowdsaleExchangeToken is Crowdsale, RefundableCrowdsaleEx{
   uint256 public PATRaised;
   ERC20 public PAT;
-  ERC20 public _token;
+  ERC20 public RAXToken;
   uint256 _amount ;
   constructor(uint256 _rate, address _wallet, ERC20 _tokenExchange, ERC20 _RAXtoken ,uint256 _goal, uint256 _openingTime, uint256 _closingTime )
   RefundableCrowdsaleEx(_goal)
@@ -22,34 +22,31 @@ contract CrowdsaleExchangeToken is Crowdsale, RefundableCrowdsaleEx{
     rate = _rate;
     wallet = _wallet;
     PAT = _tokenExchange;
-    _token = _RAXtoken;
+    RAXToken = _RAXtoken;
   }
   event TokenExchange(
     address indexed purchaser,
     address indexed beneficiary,
     /* uint256 value, */
     uint256 amount
+  );
+
+  function buyTokensExchange(address _beneficiary) public {  // this function use if purchaser want to buy PAT token by RAX tokens
+    _amount = RAXToken.allowance(msg.sender, address(RAXToken));
+
+    _preValidatePurchase(_beneficiary, _amount);
+
+    PATRaised = PATRaised.add(_amount);
+
+    uint256 tokenAmount = _getTokenAmount(_amount); // getToekenAmount is fucntion check rates and return rate*amount
+    _processPurchase(_beneficiary, tokenAmount); // token Amount will send to _beneficiary address
+
+    emit TokenExchange (
+      msg.sender,
+      _beneficiary,
+      _amount
     );
 
-    function buyTokensExchange(address _beneficiary) public {  // this function use if purchaser want to buy PAT token by RAX tokens
-
-     _amount = _token.allowance(msg.sender, address(this));
-
-     _preValidatePurchase(_beneficiary, _amount);
-
-     _token.transferFrom( msg.sender, wallet , _amount);
-
-     PATRaised = PATRaised.add(_amount);
-
-
-      uint256 tokenAmount = _getTokenAmount(_amount); // getToekenAmount is fucntion check rates and return rate*amount
-       _processPurchase(_beneficiary, tokenAmount); // token Amount will send to _beneficiary address
-
-      emit TokenExchange (
-        msg.sender,
-        _beneficiary,
-        _amount
-      );
-      _forwardFundsToken(tokenAmount, _token);
-    }
+    _forwardFundsToken(tokenAmount, RAXToken);
+  }
 }

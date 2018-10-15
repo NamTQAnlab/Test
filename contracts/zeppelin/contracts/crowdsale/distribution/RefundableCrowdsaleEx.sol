@@ -1,6 +1,5 @@
 pragma solidity ^0.4.24;
 
-
 import "../../math/SafeMath.sol";
 import "./FinalizableCrowdsale.sol";
 import "../../payment/RefundEscrowEx.sol";
@@ -16,14 +15,11 @@ contract RefundableCrowdsaleEx is FinalizableCrowdsale {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
 
-
   // minimum amount of funds to be raised in weis
   uint256 public goal;
 
   // refund escrow used to hold funds while crowdsale is running
   RefundEscrowEx private escrow;
-
-
 
   /**
    * @dev Constructor, creates RefundEscrow.
