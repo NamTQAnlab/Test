@@ -36,7 +36,6 @@ contract EscrowEx is Ownable , Escrow {
   */
   function deposit(address _payee , uint256 amount, ERC20 _token) public onlyOwner {
       // transfer token
-    _token.transferFrom(_payee, address(this), amount); // transferfrom ... call by rax token
     depositsEx[_payee] = depositsEx[_payee].add(amount);
 
     emit Deposited(_payee, amount);
