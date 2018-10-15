@@ -5,7 +5,6 @@ import "./FinalizableCrowdsale.sol";
 import "../../payment/RefundEscrowEx.sol";
 import "../../token/ERC20/SafeERC20.sol";
 
-
 /**
  * @title RefundableCrowdsale
  * @dev Extension of Crowdsale contract that adds a funding goal, and

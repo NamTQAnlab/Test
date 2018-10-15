@@ -40,7 +40,7 @@ contract EscrowEx is Ownable , Escrow {
 
     emit Deposited(_payee, amount);
   }
-
+ 
   /**
   * @dev Withdraw accumulated balance for a payee.
   * @param _payee The address whose funds will be withdrawn and transferred to.
