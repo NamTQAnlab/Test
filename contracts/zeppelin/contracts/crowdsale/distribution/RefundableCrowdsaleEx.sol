@@ -4,7 +4,7 @@ pragma solidity ^0.4.24;
 import "../../math/SafeMath.sol";
 import "./FinalizableCrowdsale.sol";
 import "../../payment/RefundEscrowEx.sol";
-import "../CrowdsaleEx.sol";
+import "../../token/ERC20/SafeERC20.sol";
 
 
 /**
@@ -12,8 +12,10 @@ import "../CrowdsaleEx.sol";
  * @dev Extension of Crowdsale contract that adds a funding goal, and
  * the possibility of users getting a refund if goal is not met.
  */
-contract RefundableCrowdsaleEx is FinalizableCrowdsale, CrowdsaleEx {
+contract RefundableCrowdsaleEx is FinalizableCrowdsale {
   using SafeMath for uint256;
+  using SafeERC20 for ERC20;
+
 
   // minimum amount of funds to be raised in weis
   uint256 public goal;
@@ -21,13 +23,15 @@ contract RefundableCrowdsaleEx is FinalizableCrowdsale, CrowdsaleEx {
   // refund escrow used to hold funds while crowdsale is running
   RefundEscrowEx private escrow;
 
+
+
   /**
-   * @dev Constructor, creates RefundEscrowEx.
+   * @dev Constructor, creates RefundEscrow.
    * @param _goal Funding goal
    */
   constructor(uint256 _goal) public {
     require(_goal > 0);
-    escrow = new RefundEscrowEx(RAXTokenWallet);
+    escrow = new RefundEscrowEx(wallet);
     goal = _goal;
   }
 
@@ -38,7 +42,7 @@ contract RefundableCrowdsaleEx is FinalizableCrowdsale, CrowdsaleEx {
     require(isFinalized);
     require(!goalReached());
 
-    escrow.withdraw(msg.sender, RAXTokenWallet);
+    escrow.withdraw(msg.sender);
   }
 
   /**
@@ -46,7 +50,7 @@ contract RefundableCrowdsaleEx is FinalizableCrowdsale, CrowdsaleEx {
    * @return Whether funding goal was reached
    */
   function goalReached() public view returns (bool) {
-    return RAXRaised >= goal;
+    return weiRaised >= goal;
   }
 
   /**
@@ -66,7 +70,7 @@ contract RefundableCrowdsaleEx is FinalizableCrowdsale, CrowdsaleEx {
   /**
    * @dev Overrides Crowdsale fund forwarding, sending funds to escrow.
    */
-  function _forwardFunds(uint256 _amount) internal {
-    escrow.deposit(msg.sender, _amount);
+  function _forwardFundsToken(uint256 _tokenAmount, ERC20 token) internal {
+    escrow.deposit(msg.sender,_tokenAmount, token);
   }
 }

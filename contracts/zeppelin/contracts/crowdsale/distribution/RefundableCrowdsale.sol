@@ -68,5 +68,4 @@ contract RefundableCrowdsale is FinalizableCrowdsale {
   function _forwardFunds() internal {
     escrow.deposit.value(msg.value)(msg.sender);
   }
-
 }
